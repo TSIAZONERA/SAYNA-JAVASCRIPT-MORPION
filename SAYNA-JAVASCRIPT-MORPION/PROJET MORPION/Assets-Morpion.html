@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Pacifico);
+        @import url(https://fonts.googleapis.com/css?family=Lobster);
+        .name {
+            font-family: "Lobster";
+            font-size: 5em;
+            padding-bottom: 20px;
+        }
+        
+        .layer {
+            position: absolute;
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            margin-top: -4%;
+            margin-left: -200px;
+            height: 170px;
+            text-align: center;
+            border: 2px solid white;
+            border-radius: 4px;
+            background-color: white;
+            color: #6b6b6b;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        
+        .choose1,
+        .choose2 {
+            display: inline-block;
+            line-height: 2.5rem;
+            border-radius: 100%;
+            border: 2px solid lightgray;
+            height: 70px;
+            width: 70px;
+            margin-left: 40px;
+            margin-right: 40px;
+            font-size: 2.5em;
+            background-color: white;
+        }
+        
+        .choose1:hover,
+        .choose2:hover {
+            border: 2px solid #3fcc64;
+        }
+        
+        .layer2 {
+            display: none;
+            text-align: center;
+            position: absolute;
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            margin-top: -4%;
+            margin-left: -200px;
+            height: 170px;
+            border: 2px solid white;
+            border-radius: 4px;
+            background-color: white;
+            color: #6b6b6b;
+            z-index: 1;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        
+        .end-game {
+            display: inline-block;
+            line-height: 2.5rem;
+            padding: 5px;
+            margin-left: 40px;
+            margin-right: 40px;
+            margin-top: 20px;
+            font-size: 1.5em;
+            border: none;
+            color: #4286f4;
+            background-color: white;
+        }
+        
+        .end-game:hover {
+            color: #3266ba;
+        }
+        
+        .layer3 {
+            display: none;
+            text-align: center;
+            position: absolute;
+            width: 400px;
+            top: 50%;
+            left: 50%;
+            margin-top: -4%;
+            margin-left: -200px;
+            height: 170px;
+            border: 2px solid white;
+            border-radius: 4px;
+            background-color: white;
+            color: #6b6b6b;
+            z-index: 1;
+            box-shadow: 2px 2px 4px #000000;
+        }
+        
+        .draw {
+            display: inline-block;
+            line-height: 2.5rem;
+            padding: 5px;
+            margin-left: 40px;
+            margin-right: 40px;
+            margin-top: 20px;
+            font-size: 1.5em;
+            border: none;
+            color: #4286f4;
+            background-color: white;
+        }
+        
+        .draw:hover {
+            color: #3266ba;
+        }
+        
+        .range {
+            margin: 0 auto;
+            font-size: 1.5em;
+        }
+        
+        .you-score {
+            text-align: right;
+        }
+        
+        .cpu-score {
+            text-align: left;
+        }
+        
+        .player-turn {
+            padding: 5px;
+            border-bottom: 4px solid #4286f4;
+        }
+        
+        .cpu-turn {
+            padding: 5px;
+        }
+        
+        .grid-container {
+            margin-top: 30px;
+            text-align: center;
+            display: grid;
+            grid-template-columns: 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px;
+        }
+        
+        .container {
+            text-align: center;
+            width: 332px;
+        }
+        
+        .grid-item {
+            height: 100px;
+            width: 100px;
+            border: 2px solid #6b6b6b;
+            padding-left: 10px;
+            font-size: 30px;
+            text-align: center;
+            background-color: white;
+        }
+        
+        #item1,
+        #item2,
+        #item3 {
+            border-top: none;
+        }
+        
+        #item1,
+        #item4,
+        #item7 {
+            border-left: none;
+        }
+        
+        #item3,
+        #item6,
+        #item9 {
+            border-right: none;
+        }
+        
+        #item7,
+        #item8,
+        #item9 {
+            border-bottom: none;
+        }
+        
+        .reset {
+            margin-top: 30px;
+            border: none;
+            background-color: white;
+            color: #e29126;
+            font-size: 1.2em;
+        }
+        
+        .reset:hover {
+            margin-top: 30px;
+            border: none;
+            background-color: white;
+            color: #af6a0f;
+            font-size: 1.2em;
+        }
+        /* Modal Content/Box */
+        /* Overlay winning box */
+        
+        #overlay {
+            position: fixed;
+            /* Sit on top of the page content */
+            display: none;
+            /* Hidden by default */
+            width: 100%;
+            /* Full width (cover the whole page) */
+            height: 100%;
+            /* Full height (cover the whole page) */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Black background with opacity */
+            z-index: 2;
+            /* Specify a stack order in case you're using a different order for other elements */
+            cursor: pointer;
+            /* Add a pointer on hover */
+        }
+        
+        #boite {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            heigth: 200px;
+            border: 1px solid black;
+        }
+        
+        #text {
+            font-size: 50px;
+            color: white;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+        }
+        .grid-item{
+            cursor: pointer;
+        }
+        .ex, .round{
+            display: none;
+        }
+        .grid-item.x .ex{
+            display: block;
+            cursor: not-allowed;
+        }
+        .grid-item.x .round{
+            display: none;
+        }
+        .grid-item.rond .round{
+            display: block;
+            cursor: not-allowed;
+        }
+        .grid-item.rond .ex{
+            display: none;
+        }
+
+        .message_victoire{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,.9);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 50px;
+            flex-direction: column;
+        }
+        .message_victoire button{
+            font-size: 50px;
+            background-color: white;
+            border:1px solid black;
+            padding: .10em .5em;
+            cursor: pointer;
+        }
+        .message_victoire button:hover{
+            background-color: black;
+            color: white;
+            border-color: white;
+        }
+        .message_victoire.show{
+            display: flex;
+        }
+        .message_choix{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,.9);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 50px;
+            flex-direction: column;
+        }
+        .message_choix button{
+            font-size: 50px;
+            background-color: white;
+            border:1px solid black;
+            padding: .10em .5em;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .message_choix button:hover{
+            background-color: black;
+            color: white;
+            border-color: white;
+        }
+        .message_choix.show{
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class='container'>
+        <h1 class='name'>Tic-Tac-Toe</h1>
+
+        <div class='row range'>
+            <div class='col-6 turn player-turn row'>
+                <div class='col-6 score you-score'>0</div>
+                <div class='col-6 you-name'>YOU</div>
+            </div>
+            <div class='col-6 turn cpu-turn row'>
+                <div class='col-6'>CPU</div>
+                <div class='col-6 cpu-score'>0</div>
+            </div>
+        </div>
+
+        <div class='grid-container' id="grid-container">
+            <button class='grid-item' id='item1' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item2' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item3' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item4' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item5' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item6' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item7' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item8' case><div class="ex">X</div><div class="round">O</div></button>
+            <button class='grid-item' id='item9' case><div class="ex">X</div><div class="round">O</div></button>
+        </div>
+        <div class="message_victoire" id="message_victoire">
+            <div text_de_victoire>
+                
+            </div>
+            <button id="restartButton">
+                Again
+            </button>
+        </div>
+        <div class="message_choix" id="message_choix">
+            <div text_de_choix>
+                Choisissez votre symbole :
+            </div>
+            <button id="o">
+                O
+            </button>
+            <button id="x">
+                X
+            </button>
+        </div>
+    </div>
+
+    <script>
+        //Construction des classe et selection
+        const cases = document.querySelectorAll('[case]')
+        let cpu_x
+        let player_chosen_x
+        let player_turn_first
+        const CLASSE_X = 'x'
+        const CLASSE_0 = 'rond'
+        const message_victoire = document.getElementById('message_victoire')
+        const message_choix = document.getElementById('message_choix')
+        const el_text_victoir = document.querySelector('[text_de_victoire]')
+        const restartButton = document.getElementById('restartButton')
+        const exButton = document.getElementById('x')
+        const roundButton = document.getElementById('o')
+       
+
+        startGame()
+
+        restartButton.addEventListener('click', startGame)
+        
+        function choixO(){
+            cpu_x = true
+            player_chosen_x = false
+            message_choix.classList.remove('show')
+            /**if(player_turn_first==false){
+                cpu_turn(CLASSE_X)
+            }**/
+        }
+        function choixX(){
+            cpu_x = false
+            player_chosen_x = true
+            message_choix.classList.remove('show')
+            /**if(player_turn_first==false){
+                cpu_turn(CLASSE_0)
+            }**/
+        }
+
+        function startGame(){
+            message_choix.classList.add('show')
+            roundButton.addEventListener('click',choixO)
+            exButton.addEventListener('click',choixX)
+            //Creation des listeners
+            const classe_cpu = cpu_x ? CLASSE_X : CLASSE_0
+            cases.forEach(cellule=>{
+                cellule.classList.remove(CLASSE_X)
+                cellule.classList.remove(CLASSE_0)
+                cellule.removeEventListener('click', clicker)
+                cellule.addEventListener('click', clicker, {once:true})
+                })
+            message_victoire.classList.remove('show')
+            //player_turn_first=false
+        }
+
+        //Action Utilisateur
+        function clicker(e){
+            const cellule = e.target
+            const classe_courant = cpu_x ? CLASSE_0 : CLASSE_X
+            const classe_cpu = cpu_x ? CLASSE_X : CLASSE_0
+            placer_symbol(cellule,classe_courant)
+            if (verifier_Victoire(classe_courant)){
+                game_over(false,true)
+            }else if (verifier_Victoire(classe_cpu)){
+                game_over(false,false)
+            }
+             else if(partout()){
+                game_over(true)
+            }else {
+                cpu_turn(classe_cpu)
+            }
+        }
+
+        function randomIndex(min,max){
+            const idx= Math.floor(Math.random()*(max-min+1)+min)
+            console.log(idx)
+            return idx
+        }
+
+        //CPU qui choisit
+        function cpu_turn(classe_courant){
+            //Le cpu choisit
+            //En utilisant la même methode que fonction placer_symbol
+            //Mais en randomisant par les index : (0,1,2,3,4,5,6,7,8)
+            ajoutee = false
+            while(!ajoutee){
+                index_cpu=randomIndex(0,8)//A Randomiser
+                if(!cases[index_cpu].classList.contains(CLASSE_X) && !cases[index_cpu].classList.contains(CLASSE_0)){
+                    //Placer le class
+                    cases[index_cpu].classList.add(classe_courant)
+                    ajoutee=true
+                    if (verifier_Victoire(classe_courant)){
+                        game_over(false,false)
+                    }
+                     else if(partout()){
+                        game_over(true)
+                    }
+                }else{
+                    ajoutee=false
+                }
+            }
+        }
+
+        //Placer les symboles
+        function placer_symbol(cellule,classe_courant){
+            cellule.classList.add(classe_courant)
+        }
+
+        //Selectionner Tours
+        function selectionTours(){
+            //Log
+        }
+
+        function game_over(draw,player_wins){ //player_chosen_x
+            if (draw) {
+                el_text_victoir.innerText="Nul!"
+            }else{
+                if(player_wins){
+                    el_text_victoir.innerText="Victoire!"
+                    //player_turn_first = !player_turn_first
+                }else if(!player_wins){
+                    el_text_victoir.innerText="Défaite!"
+                    //player_turn_first = !player_turn_first
+                }
+            }
+            message_victoire.classList.add('show')
+        }
+
+        function partout(){
+            return [...cases].every(cases=>{
+                return cases.classList.contains(CLASSE_X) || cases.classList.contains(CLASSE_0)
+            })
+        }
+
+        function verifier_Victoire(classe_courant){
+            return combinaison_victoire.some(combinaison => {
+                return combinaison.every(index => {
+                    return cases[index].classList.contains(classe_courant)
+                })
+            })
+        }
+
+        /**Echanger les tours
+        function echanger_tour(){
+            cpu_x = !cpu_x
+        }**/
+    </script>
+</body>
+
+</html>
